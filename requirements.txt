@@ -1,0 +1,24 @@
+# Defaults
+jupyter
+langchain
+langchain-chroma
+langchain-cli
+langchain-community
+langchain-openai
+langchain-tavily
+langgraph
+openai
+python-dotenv
+
+# Styling
+ruff
+
+
+# Testing
+pytest
+pytest-cov
+
+# Development
+fastapi
+uvicorn
+
