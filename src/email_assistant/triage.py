@@ -3,13 +3,13 @@ from langchain.chat_models import init_chat_model
 from langgraph.graph import END
 from langgraph.store.base import BaseStore
 from langgraph.types import Command, interrupt
-from email_assistant.schemas import TriageState, State
+from email_assistant.schemas import TriageState, Router
 from email_assistant.utils import parse_email, format_email, user_profile
 from email_assistant.memory import get_memory, update_memory
 from email_assistant.prompts import triage_system_prompt, triage_user_prompt, default_triage_instructions
 
 
-LLM_ROUTER = init_chat_model("openai:gpt-4.1")
+LLM_ROUTER = init_chat_model("openai:gpt-4.1").with_structured_output(Router)
 
 def triage_router(state: TriageState, store: BaseStore) -> Command[Literal["triage_interrupt_handler", "response_agent", "__end__"]]:
     """Analyze email content to decide if we should respond, notify, or ignore.
@@ -87,7 +87,7 @@ def triage_router(state: TriageState, store: BaseStore) -> Command[Literal["tria
     return Command(goto=goto, update=update)
 
 
-def triage_interrupt_handler(state: State, store: BaseStore) -> Command[Literal["response_agent", "__end__"]]:
+def triage_interrupt_handler(state: TriageState, store: BaseStore) -> Command[Literal["response_agent", "__end__"]]:
     """Handles interrupts from the triage step"""
     
     # Parse the email input
